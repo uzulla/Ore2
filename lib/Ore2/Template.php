@@ -5,13 +5,13 @@ class Template
 {
     public $template_dir = __DIR__ . "/template";
 
-    public function __construct($config)
+    public function __construct(array $config)
     {
         if (isset($config['template_dir']))
             $this->template_dir = $config['template_dir'];
     }
 
-    public function parse($file_name)
+    public function convertoToPhpCode(string $file_name)
     {
         $file_path = $this->template_dir . '/' . $file_name;
         $template = file_get_contents($file_path);
@@ -54,20 +54,22 @@ class Template
         return $code;
     }
 
-    public function execute($buffer, $params)
+    public function execute(string $code, array $params)
     {
         $run = function ($code, $params) {
+            // 変数をこのスコープに展開する
             foreach ($params as $key => $param) $$key = $param;
-            eval('?>' . $code); // evalは最初からPHPコードを要求するので、最初に終わらせる
+            // evalは最初からPHPコードを要求するので、最初に終わらせる
+            eval('?>' . $code);
         };
 
         ob_start();
-        $run($buffer, $params);
+        $run($code, $params);
         return ob_get_clean();
     }
 
-    public function render($file_name, $params)
+    public function render(string $file_name, array $params)
     {
-        return $this->execute($this->parse($file_name), $params);
+        return $this->execute($this->convertoToPhpCode($file_name), $params);
     }
 }
