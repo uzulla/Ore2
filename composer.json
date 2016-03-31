@@ -1,5 +1,8 @@
 {
   "autoload": {
     "psr-0": {"": "lib/"}
+  },
+  "require": {
+    "phpunit/phpunit": "^5.2"
   }
 }

@@ -10,6 +10,7 @@ $params = [
     "list" => [1,2,3]
 ];
 
-$html = $t->render('index.twig', $params);
-
-echo $html;
+$code = $t->parse('index.twig');
+file_put_contents('code.php', $code);
+$html = $t->execute($code, $params);
+file_put_contents('out.html', $html);
