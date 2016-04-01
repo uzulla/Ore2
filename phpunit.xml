@@ -3,4 +3,7 @@
     <testsuite name="Template">
         <directory suffix="Test.php">./test/Template</directory>
     </testsuite>
+    <testsuite name="Log">
+        <directory suffix="Test.php">./test/Logger</directory>
+    </testsuite>
 </phpunit>
