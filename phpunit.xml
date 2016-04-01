@@ -6,4 +6,7 @@
     <testsuite name="Log">
         <directory suffix="Test.php">./test/Logger</directory>
     </testsuite>
+    <testsuite name="Container">
+        <directory suffix="Test.php">./test/Container</directory>
+    </testsuite>
 </phpunit>
