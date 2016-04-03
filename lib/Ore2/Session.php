@@ -19,7 +19,7 @@ class Session implements \ArrayAccess
 
     public function __get($key)
     {
-        if(!$this->_storage->isset($key)) return null;
+        if (!$this->_storage->isset($key)) return null;
         return $this->_storage->get($key);
     }
 

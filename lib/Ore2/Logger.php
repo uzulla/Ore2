@@ -84,7 +84,7 @@ class Logger implements LoggerInterface
 
     public function log($level, $message, array $context = array())
     {
-        if (!preg_match('/\A[0-9]{3}\z/u', $level))  $level = constant("static::" . $level);
+        if (!preg_match('/\A[0-9]{3}\z/u', $level)) $level = constant("static::" . $level);
         if (!isset(static::$levels[$level])) throw new \InvalidArgumentException('Unknown log level');
         if ($this->level > $level) return;
 
@@ -109,17 +109,17 @@ class Logger implements LoggerInterface
             $fh = fopen($this->log_file_name, 'a');
             if (!is_resource($fh)) throw new \UnexpectedValueException(sprintf('"%s" could not be opened.', $this->log_file_name));
             $retry = 5;
-            while( $retry-- ) {
+            while ($retry--) {
                 if (flock($fh, LOCK_EX)) {  // 排他ロック
                     fwrite($fh, date('[Y-m-d H:i:s] ') . $log_line . PHP_EOL);
                     fflush($fh);
                     flock($fh, LOCK_UN);
                     break;
                 } else {
-                    usleep(rand(1,10)*100000); // retry wait 0.1〜1秒
+                    usleep(rand(1, 10) * 100000); // retry wait 0.1〜1秒
                 }
             }
-            if($retry===0) error_log(get_class($this).": Can't open logfile. ". $log_line);
+            if ($retry === 0) error_log(get_class($this) . ": Can't open logfile. " . $log_line);
             fclose($fh);
         }
     }

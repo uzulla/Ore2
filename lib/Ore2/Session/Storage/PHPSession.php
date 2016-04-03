@@ -5,19 +5,23 @@ use Ore2\Session\StorageInterface;
 
 class PHPSession implements StorageInterface
 {
-    public function get($key){
+    public function get($key)
+    {
         return $_SESSION[$key];
     }
 
-    public function set($key, $val){
+    public function set($key, $val)
+    {
         $_SESSION[$key] = $val;
     }
 
-    public function isset($key){
+    public function isset($key)
+    {
         return isset($_SESSION[$key]);
     }
 
-    public function unset($key){
+    public function unset($key)
+    {
         unset($_SESSION[$key]);
     }
 

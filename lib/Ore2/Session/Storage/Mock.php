@@ -7,19 +7,23 @@ class Mock implements StorageInterface
 {
     private $store = [];
 
-    public function get($key){
+    public function get($key)
+    {
         return $this->store[$key];
     }
 
-    public function set($key, $val){
+    public function set($key, $val)
+    {
         $this->store[$key] = $val;
     }
 
-    function isset($key){
+    function isset($key)
+    {
         return isset($this->store[$key]);
     }
 
-    public function unset($key){
+    public function unset($key)
+    {
         unset($this->store[$key]);
     }
 }
