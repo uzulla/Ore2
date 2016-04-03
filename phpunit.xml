@@ -9,4 +9,7 @@
     <testsuite name="Container">
         <directory suffix="Test.php">./test/Container</directory>
     </testsuite>
+    <testsuite name="Session">
+        <directory suffix="Test.php">./test/Session</directory>
+    </testsuite>
 </phpunit>
