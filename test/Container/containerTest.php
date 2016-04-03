@@ -55,4 +55,19 @@ class containerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $c['date']);
     }
 
+    public function testKeepInstance()
+    {
+        $c = new Container();
+        $c['str'] = "string";
+
+        $c->keepInstance();
+
+        $c = null; // dispose
+        $this->assertEquals(null, $c);
+
+        $c2 = Container::pickInstance();
+
+        $this->assertEquals("string", $c2['str']);
+    }
+
 }

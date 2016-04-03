@@ -3,6 +3,18 @@ namespace Ore2;
 
 class Container implements \ArrayAccess
 {
+    static $instanceList = [];
+
+    public function keepInstance($key = "_")
+    {
+        static::$instanceList[$key] = $this;
+    }
+
+    static function pickInstance($key = "_")
+    {
+        return static::$instanceList[$key];
+    }
+
     public $list = [];
 
     public function __set($key, $something)
