@@ -84,7 +84,7 @@ class Router
 
     /**
      * Convenient execute.
-     * PSR-7がどうこうがない人はこちらを使うと速い
+     * PSR-7がどうこうがない人はこちらを使うと早い
      * @param Container $container
      * @param RequestInterface $request
      * @param ResponseInterface $response
