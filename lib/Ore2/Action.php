@@ -21,7 +21,7 @@ class Action
         $this->response = $response;
     }
 
-    public function html($html='', $status_code=200)
+    public function html($html = '', $status_code = 200)
     {
         $response = $this->response;
         $response = $response->withStatus($status_code);
@@ -62,7 +62,8 @@ class Action
         }
     }
 
-    public function __invoke(RequestInterface $request, ResponseInterface $response){
+    public function __invoke(RequestInterface $request, ResponseInterface $response)
+    {
         throw new \Exception('need implement');
     }
 

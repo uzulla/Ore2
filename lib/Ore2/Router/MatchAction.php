@@ -25,8 +25,8 @@ class MatchAction
             $action = $action->bindTo(new Action($this->container, $request, $response));
 
         } else {
-            if(!preg_match('|\A([\\a-zA-Z0-9_]*)::([a-zA-Z0-9_]+)\z|u', $action, $matches)){
-                throw new \InvalidArgumentException('invalid action string:'.$action);
+            if (!preg_match('|\A([\\a-zA-Z0-9_]*)::([a-zA-Z0-9_]+)\z|u', $action, $matches)) {
+                throw new \InvalidArgumentException('invalid action string:' . $action);
             }
 
             $action = new $matches[1]($this->container, $request, $response);

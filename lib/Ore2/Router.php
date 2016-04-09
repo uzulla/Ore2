@@ -60,7 +60,7 @@ class Router
      * @param string $uri
      * @return MatchAction
      */
-    public function findMatch($method ='get', $uri='/'):MatchAction
+    public function findMatch($method = 'get', $uri = '/'):MatchAction
     {
         $method = strtolower($method);
 
