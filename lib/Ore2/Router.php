@@ -8,8 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 class Router
 {
     public $route = [
-        "post" => [],
-        "get" => []
     ];
 
     public $specialRoute = [
@@ -37,9 +35,7 @@ class Router
     public function setRoute(string $method, string $path, $action)
     {
         $method = strtolower($method);
-        if (!isset($this->route[$method]))
-            throw new \InvalidArgumentException('Not acceptable method');
-
+        if (!isset($this->route[$method])) $this->route[$method];
         $this->route[$method][$path] = $action;
         return $this;
     }
@@ -92,6 +88,13 @@ class Router
         return new MatchResult($route_list[$match_path], $matches);
     }
 
+    /**
+     * Convenient execute.
+     * PSR-7がどうこうがない人はこちらを使うと速い
+     * @param Container $container
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     */
     public function run(Container $container, RequestInterface $request, ResponseInterface $response)
     {
         $response = $this
