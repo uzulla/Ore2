@@ -7,40 +7,34 @@ use Psr\Http\Message\ResponseInterface;
 
 class Router
 {
-    public $route = [
-    ];
+    public $route = [];
 
     public $specialRoute = [
         "not_found" => '\Ore2\Router\DefaultRoute::notFound',
         "method_not_allowed" => '\Ore2\Router\DefaultRoute::methodNotAllowed'
     ];
 
-    public function any(string $path, $action)
+    public function get(string $path, $action):self
     {
-        foreach (array_keys($this->route) as $method)
+        return $this->setRoute(['get'], $path, $action);
+    }
+
+    public function post(string $path, $action):self
+    {
+        return $this->setRoute(['post'], $path, $action);
+    }
+
+    public function setRoute(array $method_list, string $path, $action):self
+    {
+        foreach($method_list as $method) {
+            $method = strtolower($method);
+            $this->route[$method] = $this->route[$method] ?? [];
             $this->route[$method][$path] = $action;
+        }
         return $this;
     }
 
-    public function get(string $path, $action)
-    {
-        return $this->setRoute('get', $path, $action);
-    }
-
-    public function post(string $path, $action)
-    {
-        return $this->setRoute('post', $path, $action);
-    }
-
-    public function setRoute(string $method, string $path, $action)
-    {
-        $method = strtolower($method);
-        if (!isset($this->route[$method])) $this->route[$method];
-        $this->route[$method][$path] = $action;
-        return $this;
-    }
-
-    public function setSpecialRoute($name, $action)
+    public function setSpecialRoute(string $name, $action):self
     {
         $this->specialRoute[$name] = $action;
         return $this;
