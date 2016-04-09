@@ -14,19 +14,20 @@ $response = new \Zend\Diactoros\Response();
 $router = new \Ore2\Router($container);
 
 $router->get('/', function(){
-    $this->html('<span style="color:red">123</span>');
+    return $this->html('<span style="color:red">123</span>');
 });
 
 $router->get('/name/:name', function(){
-    $this->html("hello {$this->c->routeParams['name']}");
+    return $this->html("hello {$this->c->routeParams['name']}");
 });
 
 $router->get('/sample', '\\MyApp\\SampleAction::sample');
+$router->get('/sample_json', '\\MyApp\\SampleAction::sampleJson');
 
-$router->run($request, $response);
+/** @var \Ore2\Router\MatchAction $action */
+$action = $router->findMatch($request->getMethod(), $request->getRequestTarget());
 
-//$router
-//    ->findMatch($request->getMethod(), $request->getRequestTarget())
-//    ->__invoke($request, $response);
+// if you need middleware, insert here.
+$response = $action($request, $response);
 
-
+\Ore2\Transmitter::sendResponse($response);

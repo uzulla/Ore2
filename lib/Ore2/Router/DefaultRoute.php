@@ -7,9 +7,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class DefaultRoute extends Action
 {
-    public function notfound(RequestInterface $request, ResponseInterface $response)
+    public function notFound(RequestInterface $request, ResponseInterface $response):ResponseInterface
     {
-        $this->html("Notfound", 404);
+        return $this->html("NotFound", 404);
+    }
+
+    public function badRequest(RequestInterface $request, ResponseInterface $response):ResponseInterface
+    {
+        return $this->html("BadRequest", 400);
     }
 
 }

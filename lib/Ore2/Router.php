@@ -12,7 +12,8 @@ class Router
     ];
 
     public $specialRoute = [
-        "notfound" => '\Ore2\Router\DefaultRoute::notfound'
+        "not_found" => '\Ore2\Router\DefaultRoute::notFound',
+        "bad_request" => '\Ore2\Router\DefaultRoute::badRequest'
     ];
 
     public $container;
@@ -57,63 +58,49 @@ class Router
 
     /**
      * @param string $method
-     * @param string $uri
+     * @param string $path
      * @return MatchAction
      */
-    public function findMatch($method = 'get', $uri = '/'):MatchAction
+    public function findMatch($method = 'get', $path = '/'):MatchAction
     {
         $method = strtolower($method);
 
         if (!isset($this->route[$method]))
-            throw new \InvalidArgumentException('Not acceptable method');
+            return new MatchAction($this->container, $this->specialRoute['bad_request']);
 
         $route_list = $this->route[$method];
 
-        // create regex list
+        // create match regex list
         $regex_list = [];
         foreach ($route_list as $route => $cb) {
-            $regex_list[$route] = preg_replace_callback(
-                '#:([\w]+)#',
-                function ($m) {
-                    return "(?P<{$m[1]}>[^/]+)";
-                },
+            $regex_list[$route] = '#\A'.preg_replace_callback(
+                '/:([\w]+)/',
+                function ($m) { return "(?P<{$m[1]}>[^/]+)"; },
                 $route
-            );
+            ).'\z#u'; // sample -> #\A/name/(?P<name>[^/]+)\z#u
         }
 
         // do match!
         $matches = [];
-        $match_route = false;
-
+        $match_path = false;
         foreach ($regex_list as $_path => $regex) {
-            if (preg_match("#\A{$regex}\z#u", $uri, $matches)) {
-                $match_route = $_path;
+            if (preg_match($regex, $path, $matches)) {
+                $match_path = $_path;
                 break;
             }
         }
 
-        if ($match_route == false)
-            return new MatchAction($this->container, $this->specialRoute['notfound']);
+        if ($match_path == false)
+            return new MatchAction($this->container, $this->specialRoute['not_found']);
 
-        // response callback
-        $params = preg_grep('/[0-9]/u', $matches, PREG_GREP_INVERT);
-        array_walk($params, function (&$v) {
-            $v = urldecode($v);
-        });
+        $matches = array_map('urldecode', $matches);
 
-        $cb = $this->route[$method][$match_route];
-
-        return new MatchAction($this->container, $cb, $params);
+        return new MatchAction($this->container, $route_list[$match_path], $matches);
     }
 
     public function run(RequestInterface $request, $response)
     {
-        $this
-            ->findMatch($request->getMethod(), $request->getRequestTarget())
-            ->__invoke($request, $response);
+        $action=$this->findMatch($request->getMethod(), $request->getRequestTarget());
+        return $action($request, $response);
     }
-}
-
-class RouteNotFoundException extends \Exception
-{
 }

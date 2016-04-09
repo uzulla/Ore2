@@ -3,6 +3,7 @@ namespace Ore2\Router;
 
 use Ore2\Action;
 use Ore2\Container;
+use Psr\Http\Message\ResponseInterface;
 
 class MatchAction
 {
@@ -16,7 +17,7 @@ class MatchAction
         $this->action = $action;
     }
 
-    public function __invoke($request, $response)
+    public function __invoke($request, $response):ResponseInterface
     {
         $action = $this->action;
         $methodName = "__invoke";
@@ -33,7 +34,7 @@ class MatchAction
             $methodName = $matches[2];
         }
 
-        $action->$methodName($request, $response);
+        return $action->$methodName($request, $response);
     }
 
 }
