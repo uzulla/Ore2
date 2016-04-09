@@ -42,11 +42,11 @@ class Action
         }
 
         if(!is_null($data)) {
-            $body = new Stream('php://memory', 'w');
+            $body = new Stream('php://memory', 'w'); // とりあえず…
             $body->write($data);
             $response = $response->withBody($body);
         }
+
         return $response;
     }
-
 }
