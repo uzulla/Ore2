@@ -1,17 +1,18 @@
 <?php
 namespace Ore2;
 
+use Ore2\Router\MatchAction;
 use Psr\Http\Message\RequestInterface;
-
-class RouteNotFoundException extends \Exception
-{
-}
 
 class Router
 {
     public $route = [
         "post" => [],
         "get" => []
+    ];
+
+    public $specialRoute = [
+        "notfound" => '\Ore2\Router\DefaultRoute::notfound'
     ];
 
     public $container;
@@ -25,16 +26,17 @@ class Router
     {
         foreach (array_keys($this->route) as $method)
             $this->route[$method][$path] = $callback;
+        return $this;
     }
 
     public function get(string $path, $callback)
     {
-        $this->setRoute('get', $path, $callback);
+        return $this->setRoute('get', $path, $callback);
     }
 
     public function post(string $path, $callback)
     {
-        $this->setRoute('post', $path, $callback);
+        return $this->setRoute('post', $path, $callback);
     }
 
     public function setRoute(string $method, string $path, $callback)
@@ -44,17 +46,23 @@ class Router
             throw new \InvalidArgumentException('Not acceptable method');
 
         $this->route[$method][$path] = $callback;
+        return $this;
+    }
+
+    public function setSpecialRoute($name, $callback)
+    {
+        $this->specialRoute[$name] = $callback;
+        return $this;
     }
 
     /**
-     * @param RequestInterface $request
-     * @return RouterResult
-     * @throws RouteNotFoundException
+     * @param string $method
+     * @param string $uri
+     * @return MatchAction
      */
-    public function run(RequestInterface $request):RouterResult
+    public function findMatch($method ='get', $uri='/'):MatchAction
     {
-        $method = strtolower($request->getMethod());
-        $uri = $request->getRequestTarget();
+        $method = strtolower($method);
 
         if (!isset($this->route[$method]))
             throw new \InvalidArgumentException('Not acceptable method');
@@ -84,8 +92,8 @@ class Router
             }
         }
 
-        if ($match_route == false) throw new RouteNotFoundException('any match route found.');
-
+        if ($match_route == false)
+            return new MatchAction($this->container, $this->specialRoute['notfound']);
 
         // response callback
         $params = preg_grep('/[0-9]/u', $matches, PREG_GREP_INVERT);
@@ -95,41 +103,17 @@ class Router
 
         $cb = $this->route[$method][$match_route];
 
-        return new RouterResult($this->container, $cb, $params);
+        return new MatchAction($this->container, $cb, $params);
     }
 
-    public function __invoke(RequestInterface $request)
+    public function run(RequestInterface $request, $response)
     {
-        $this->run($request);
+        $this
+            ->findMatch($request->getMethod(), $request->getRequestTarget())
+            ->__invoke($request, $response);
     }
 }
 
-class RouterResult
+class RouteNotFoundException extends \Exception
 {
-    public $container;
-    public $action;
-
-    public function __construct(Container $container, $action, array $params)
-    {
-        $this->container = $container;
-        $this->container->routeParams = $params;
-        $this->action = $action;
-    }
-
-    public function __invoke($request, $response)
-    {
-        $action = $this->action;
-
-        if ($this->action instanceof \Closure) {
-            $action = $action->bindTo(new Action($this->container, $request, $response));
-        } else if ($this->action instanceof Action) {
-            // ok
-        } else {
-            // クラス名で起動とかやりたいよね
-            throw new \InvalidArgumentException('not implemented yet');
-        }
-
-        $action->__invoke($request, $response);
-    }
-
 }

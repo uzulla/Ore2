@@ -21,10 +21,10 @@ class Action
         $this->response = $response;
     }
 
-    public function html($html='')
+    public function html($html='', $status_code=200)
     {
         $response = $this->response;
-        $response = $response->withStatus(200);
+        $response = $response->withStatus($status_code);
         $response = $response->withHeader('Content-Type', 'text/html');
         $body = new Stream('php://memory', 'w');
         $body->write($html);
@@ -58,8 +58,12 @@ class Action
         }
 
         while (!$body->eof()) {
-            echo $body->read(1024);
+            echo $body->read(1024); // TODO set nice chunk size.
         }
+    }
+
+    public function __invoke(RequestInterface $request, ResponseInterface $response){
+        throw new \Exception('need implement');
     }
 
 }
