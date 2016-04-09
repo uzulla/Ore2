@@ -13,7 +13,7 @@ class Router
 
     public $specialRoute = [
         "not_found" => '\Ore2\Router\DefaultRoute::notFound',
-        "bad_request" => '\Ore2\Router\DefaultRoute::badRequest'
+        "method_not_allowed" => '\Ore2\Router\DefaultRoute::methodNotAllowed'
     ];
 
     public $container;
@@ -66,7 +66,7 @@ class Router
         $method = strtolower($method);
 
         if (!isset($this->route[$method]))
-            return new MatchAction($this->container, $this->specialRoute['bad_request']);
+            return new MatchAction($this->container, $this->specialRoute['method_not_allowed']);
 
         $route_list = $this->route[$method];
 

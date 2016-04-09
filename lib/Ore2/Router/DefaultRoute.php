@@ -12,9 +12,9 @@ class DefaultRoute extends Action
         return $this->html("NotFound", 404);
     }
 
-    public function badRequest(RequestInterface $request, ResponseInterface $response):ResponseInterface
+    public function methodNotAllowed(RequestInterface $request, ResponseInterface $response):ResponseInterface
     {
-        return $this->html("BadRequest", 400);
+        return $this->html("Method Not Allowed", 405);
     }
 
 }
