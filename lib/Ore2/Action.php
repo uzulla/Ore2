@@ -49,4 +49,12 @@ class Action
 
         return $response;
     }
+
+    public function redirect(string $url, int $status_code=302, ResponseInterface $response=null):ResponseInterface
+    {
+        /** @var ResponseInterface $response */
+        $response = $response ?? $this->response;
+        $response = $response->withStatus($status_code)->withHeader('Location', $url);
+        return $response;
+    }
 }
