@@ -9,7 +9,7 @@ $container->template = new \Ore2\Template($container->config['template']);
 $container->logger = new \Ore2\Logger();
 
 // Route 登録
-$router = new \Ore2\Router($container);
+$router = new \Ore2\Router();
 $router->get('/', function(){
     return $this->html('<span style="color:red">123</span>');
 });
@@ -24,7 +24,7 @@ $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 $response = new \Zend\Diactoros\Response();
 
 // route 解決
-$action = $router->findMatch($request->getMethod(), $request->getRequestTarget());
+$action = $router->findMatch($container, $request->getMethod(), $request->getRequestTarget());
 
 // 実行
 $response = $action($request, $response);
