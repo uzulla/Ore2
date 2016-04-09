@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Ore2\Router;
 
 use Ore2\Container;

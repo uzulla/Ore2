@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Ore2;
 
 use Ore2\Session\StorageInterface;
