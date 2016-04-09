@@ -1,7 +1,7 @@
 <?php
 namespace Ore2;
 
-use Ore2\Router\MatchAction;
+use Ore2\Router\MatchResult;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -51,17 +51,16 @@ class Router
     }
 
     /**
-     * @param Container $container
      * @param string $method
      * @param string $path
-     * @return MatchAction
+     * @return MatchResult
      */
-    public function findMatch(Container $container, $method = 'get', $path = '/'):MatchAction
+    public function findMatch($method = 'get', $path = '/'):MatchResult
     {
         $method = strtolower($method);
 
         if (!isset($this->route[$method]))
-            return new MatchAction($container, $this->specialRoute['method_not_allowed']);
+            return new MatchResult($this->specialRoute['method_not_allowed']);
 
         $route_list = $this->route[$method];
 
@@ -86,17 +85,19 @@ class Router
         }
 
         if ($match_path == false)
-            return new MatchAction($container, $this->specialRoute['not_found']);
+            return new MatchResult($this->specialRoute['not_found']);
 
         $matches = array_map('urldecode', $matches);
 
-        return new MatchAction($container, $route_list[$match_path], $matches);
+        return new MatchResult($route_list[$match_path], $matches);
     }
 
     public function run(Container $container, RequestInterface $request, ResponseInterface $response)
     {
-        $action = $this->findMatch($container, $request->getMethod(), $request->getRequestTarget());
-        $response = $action($request, $response);
+        $response = $this
+            ->findMatch($request->getMethod(), $request->getRequestTarget())
+            ->buildAction($container)
+            ->__invoke($request, $response);
         Transmitter::sendResponse($response);
     }
 }

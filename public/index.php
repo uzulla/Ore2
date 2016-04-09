@@ -23,8 +23,13 @@ $router->get('/sample_json', '\\MyApp\\SampleAction::sampleJson');
 $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 $response = new \Zend\Diactoros\Response();
 
+// convenient
+// $router->run($container, $request, $response);
+// exit;
+
 // route 解決
-$action = $router->findMatch($container, $request->getMethod(), $request->getRequestTarget());
+$match_result = $router->findMatch($request->getMethod(), $request->getRequestTarget());
+$action = $match_result->buildAction($container);
 
 // 実行
 $response = $action($request, $response);
