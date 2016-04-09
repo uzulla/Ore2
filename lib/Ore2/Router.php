@@ -23,36 +23,36 @@ class Router
         $this->container = $container;
     }
 
-    public function any(string $path, $callback)
+    public function any(string $path, $action)
     {
         foreach (array_keys($this->route) as $method)
-            $this->route[$method][$path] = $callback;
+            $this->route[$method][$path] = $action;
         return $this;
     }
 
-    public function get(string $path, $callback)
+    public function get(string $path, $action)
     {
-        return $this->setRoute('get', $path, $callback);
+        return $this->setRoute('get', $path, $action);
     }
 
-    public function post(string $path, $callback)
+    public function post(string $path, $action)
     {
-        return $this->setRoute('post', $path, $callback);
+        return $this->setRoute('post', $path, $action);
     }
 
-    public function setRoute(string $method, string $path, $callback)
+    public function setRoute(string $method, string $path, $action)
     {
         $method = strtolower($method);
         if (!isset($this->route[$method]))
             throw new \InvalidArgumentException('Not acceptable method');
 
-        $this->route[$method][$path] = $callback;
+        $this->route[$method][$path] = $action;
         return $this;
     }
 
-    public function setSpecialRoute($name, $callback)
+    public function setSpecialRoute($name, $action)
     {
-        $this->specialRoute[$name] = $callback;
+        $this->specialRoute[$name] = $action;
         return $this;
     }
 
