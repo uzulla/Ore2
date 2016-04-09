@@ -21,27 +21,27 @@ class Action
         $this->response = $response;
     }
 
-    public function html(string $html = '', int $status_code = 200, ResponseInterface $response=null):ResponseInterface
+    public function html(string $html = '', int $status_code = 200, ResponseInterface $response = null):ResponseInterface
     {
         return $this->raw('text/html', $html, $status_code, $response);
     }
 
-    public function json($data, int $status_code = 200, ResponseInterface $response=null):ResponseInterface
+    public function json($data, int $status_code = 200, ResponseInterface $response = null):ResponseInterface
     {
         return $this->raw('application/json', json_encode($data), $status_code, $response); // TODO need more nice json_encode opt
     }
 
-    public function raw(string $content_type=null, string $data=null, int $status_code = 200, ResponseInterface $response=null):ResponseInterface
+    public function raw(string $content_type = null, string $data = null, int $status_code = 200, ResponseInterface $response = null):ResponseInterface
     {
         /** @var ResponseInterface $response */
         $response = $response ?? $this->response;
         $response = $response->withStatus($status_code);
 
-        if(!is_null($content_type)) {
+        if (!is_null($content_type)) {
             $response = $response->withHeader('Content-Type', $content_type);
         }
 
-        if(!is_null($data)) {
+        if (!is_null($data)) {
             $body = new Stream('php://memory', 'w'); // とりあえず…
             $body->write($data);
             $response = $response->withBody($body);
@@ -50,7 +50,7 @@ class Action
         return $response;
     }
 
-    public function redirect(string $url, int $status_code=302, ResponseInterface $response=null):ResponseInterface
+    public function redirect(string $url, int $status_code = 302, ResponseInterface $response = null):ResponseInterface
     {
         /** @var ResponseInterface $response */
         $response = $response ?? $this->response;
