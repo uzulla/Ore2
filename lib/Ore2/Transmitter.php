@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 class Transmitter
 {
     /**
-     * Send Response by header() and echo()
+     * Send HTTP Response by header() and echo()
      * @param ResponseInterface|null $response
      */
     static function sendResponse(ResponseInterface $response = null)
