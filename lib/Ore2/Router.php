@@ -100,7 +100,8 @@ class Router
 
     public function run(RequestInterface $request, $response)
     {
-        $action=$this->findMatch($request->getMethod(), $request->getRequestTarget());
-        return $action($request, $response);
+        $action = $this->findMatch($request->getMethod(), $request->getRequestTarget());
+        $response = $action($request, $response);
+        Transmitter::sendResponse($response);
     }
 }
