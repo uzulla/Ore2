@@ -36,9 +36,11 @@ class MatchAction
 
         $response = $action->$methodName($request, $response);
 
-        if(is_null($next))
+        if(!is_null($next))
             $response = $next($request, $response, $next);
 
         return $response;
     }
 }
+
+// これはRouterの下ではなく、Actionの下に行くべきなのでは…
