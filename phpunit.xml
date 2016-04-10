@@ -12,4 +12,7 @@
     <testsuite name="Session">
         <directory suffix="Test.php">./test/Session</directory>
     </testsuite>
+    <testsuite name="Router">
+        <directory suffix="Test.php">./test/Router</directory>
+    </testsuite>
 </phpunit>
