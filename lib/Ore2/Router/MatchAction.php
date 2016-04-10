@@ -19,7 +19,7 @@ class MatchAction
         $this->action = $action;
     }
 
-    public function __invoke(RequestInterface $request, ResponseInterface $response):ResponseInterface
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next=null):ResponseInterface
     {
         $action = $this->action;
         $methodName = "__invoke";
@@ -34,6 +34,11 @@ class MatchAction
             $methodName = $matches[2];
         }
 
-        return $action->$methodName($request, $response);
+        $response = $action->$methodName($request, $response);
+
+        if(is_null($next))
+            $response = $next($request, $response, $next);
+
+        return $response;
     }
 }

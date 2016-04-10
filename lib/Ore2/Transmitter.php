@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace Ore2;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Transmitter
@@ -32,5 +33,19 @@ class Transmitter
         if ($body->isSeekable()) $body->rewind();
 
         while (!$body->eof()) echo $body->read(1024); // TODO set nice chunk size.
+    }
+
+    /**
+     * middle ware interface
+     * @param $request
+     * @param $response
+     * @param $next
+     * @return ResponseInterface
+     */
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next):ResponseInterface
+    {
+        $response = $next($request, $response);
+        static::sendResponse($response);
+        return $response;
     }
 }

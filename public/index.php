@@ -32,8 +32,13 @@ $response = new \Zend\Diactoros\Response();
 $match_result = $router->findMatch($request->getMethod(), $request->getRequestTarget());
 $action = $match_result->buildAction($container);
 
-// 実行
-$response = $action($request, $response);
+// Middlewareとして実行
+$seqencer = new \Ore2\MiddlewareSequencer([
+    new \Ore2\Transmitter(),
+    $action
+]);
+$seqencer($request, $response);
 
-// 送信
-\Ore2\Transmitter::sendResponse($response);
+// Middlewareでなく、scriptとして実行
+// $response = $action($request, $response); // 実行
+// \Ore2\Transmitter::sendResponse($response); // 送信
