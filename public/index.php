@@ -2,13 +2,6 @@
 declare(strict_types=1);
 include __DIR__."/../vendor/autoload.php";
 
-// 各種ヘルパーをコンテナにいれる
-$container = new \Ore2\Container();
-$container->config = require __DIR__."/../settings.php";
-$container->session = new \Ore2\Session(new \Ore2\Session\Storage\PHPSession());
-$container->template = new \Ore2\Template($container->config['template']);
-$container->logger = new \Ore2\Logger();
-
 // Route 登録
 $router = new \Ore2\Router();
 $router->get('/', function(){
@@ -24,12 +17,16 @@ $router->get('/sample_json', '\\MyApp\\SampleAction::sampleJson');
 $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals();
 $response = new \Zend\Diactoros\Response();
 
-// convenient
-// $router->run($container, $request, $response);
-// exit;
-
 // route 解決
 $match_result = $router->findMatch($request->getMethod(), $request->getRequestTarget());
+
+// 各種ヘルパーをコンテナにいれる
+$container = new \Ore2\Container();
+$container->config = require __DIR__."/../settings.php";
+$container->session = new \Ore2\Session(new \Ore2\Session\Storage\PHPSession());
+$container->template = new \Ore2\Template($container->config['template']);
+$container->logger = new \Ore2\Logger();
+// アクションを作成
 $action = $match_result->buildAction($container);
 
 // Middlewareとして実行
@@ -38,7 +35,3 @@ $seqencer = new \Ore2\MiddlewareSequencer([
     $action
 ]);
 $seqencer($request, $response);
-
-// Middlewareでなく、scriptとして実行
-// $response = $action($request, $response); // 実行
-// \Ore2\Transmitter::sendResponse($response); // 送信
