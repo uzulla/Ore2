@@ -32,6 +32,7 @@ $container->template =
         new Twig_Loader_Filesystem($container->config['template']['template_dir']),
         ['debug' => true]
     );
+$container->viewParams = [];
 \MyApp\Db::$pdo = new \PDO($container->config['db']['dsn']);
 
 // アクションを作成
@@ -41,6 +42,7 @@ $action = $match_result->buildAction($container);
 $seqencer = new \Ore2\MiddlewareSequencer([
     new \Ore2\Transmitter(),
     new \Ore2\LeakCatcher(),
+    new \Ore2\CsrfTrap($container),
     $action
 ]);
 

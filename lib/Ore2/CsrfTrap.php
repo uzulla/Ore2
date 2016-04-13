@@ -1,0 +1,73 @@
+<?php
+declare(strict_types=1);
+namespace Ore2;
+
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Stream;
+
+class CsrfTrap
+{
+    /** @var Container */
+    public $container;
+    public $csrfTokenName = '__CSRF_TOKEN__';
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * middle ware interface
+     * @param $request
+     * @param $response
+     * @param $next
+     * @return ResponseInterface
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next):ResponseInterface
+    {
+        /** @var Session $session */
+        $session = $this->container->session;
+        $token_name = $this->csrfTokenName;
+
+        $session_csrf_token = $session[$token_name] ?? false;
+
+        if($request->getMethod()==='POST'){
+            if($session_csrf_token === false){
+                return $this->generateBadRequest($response);
+            }
+
+            $params = $request->getParsedBody();
+            $csrf_token = $params[$token_name] ?? false;
+
+            if($session_csrf_token!==$csrf_token){
+                return $this->generateBadRequest($response);
+            }
+        }
+
+        if($session_csrf_token === false){
+            $session[$token_name] = bin2hex(random_bytes(64));
+        }
+
+        $this->container->viewParams = array_merge(
+            $this->container->viewParams,
+            [
+                'csrf_token_name' => $token_name,
+                'csrf_token_value' => $session[$token_name]
+            ]
+        );
+
+        $response = $next($request, $response);
+
+        return $response;
+    }
+
+    public function generateBadRequest(ResponseInterface $response)
+    {
+        $body = new Stream('php://memory', 'w');
+        $body->write('invalid csrf token');
+        $response = $response->withBody($body)->withStatus(400);
+        return $response;
+    }
+}
