@@ -40,6 +40,7 @@ $action = $match_result->buildAction($container);
 // Middlewareとして実行
 $seqencer = new \Ore2\MiddlewareSequencer([
     new \Ore2\Transmitter(),
+    new \Ore2\LeakCatcher(),
     $action
 ]);
 

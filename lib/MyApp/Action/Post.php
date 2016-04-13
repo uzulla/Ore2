@@ -11,7 +11,6 @@ class Post extends Action
     {
         $m_post = new \MyApp\Db\Post();
         $list = $m_post->getAll();
-
         return $this->render("list.twig", ['list'=>$list]);
     }
 
@@ -28,7 +27,7 @@ class Post extends Action
 
     public function show(ServerRequestInterface $request, ResponseInterface $response):ResponseInterface
     {
-        $id = $this->c->routeParams['id'];
+        $id = $this->routeParams('id');
         $m_post = new \MyApp\Db\Post();
         $row = $m_post->get($id);
         if($row===false){
