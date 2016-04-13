@@ -22,6 +22,9 @@ class LeakCatcher
         if(strlen($buffer)){
             error_log('!!!Something leaked!!!:'.$buffer);
         }
+        if (headers_sent()) {
+            error_log('!!!Something header sent!!!');
+        }
         return $response;
     }
 }
