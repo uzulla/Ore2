@@ -31,7 +31,7 @@ class Template
                 for (; $length > $i; $i++) {
                     if (($chars[$i] == "}" || $chars[$i] == "%") && $chars[$i + 1] == "}") {
                         // }} あるいは %} なら token 読み取りを終了
-                        echo PHP_EOL;
+                        $token_buffer .= PHP_EOL;
                         $i++;
                         break;
                     }
@@ -39,13 +39,13 @@ class Template
                 }
 
                 if ($is_print) {
-                    $code .= '<?php echo htmlspecialchars($' . trim($token_buffer) . ',ENT_QUOTES, "UTF-8"); ?>';
+                    $code .= '<?php echo htmlspecialchars($' . trim($token_buffer) . ',ENT_QUOTES, "UTF-8"); ?'.'>';
                 } else {
                     $tokens = preg_split('/\s+/u', trim($token_buffer), -1, PREG_SPLIT_NO_EMPTY);
                     if ($tokens[0] === 'for') {
-                        $code .= '<?php foreach( $' . $tokens[3] . ' as $' . $tokens[1] . ' ){ ?>';
+                        $code .= '<?php foreach( $' . $tokens[3] . ' as $' . $tokens[1] . ' ){ ?'.'>';
                     } else if ($tokens[0] === 'endfor') {
-                        $code .= '<?php } ?>';
+                        $code .= '<?php } ?'.'>';
                     }
                 }
             } else {
