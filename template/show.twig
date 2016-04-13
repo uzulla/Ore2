@@ -1,0 +1,26 @@
+{% extends "layout.twig" %}
+{% block content %}
+<h1>けいじばん</h1>
+
+<ul>
+    <li>
+        {{ row.name }}:
+        {{ row.text }} /
+        (<a href="/post/{{ row.id }}">{{ row.time|date("Y-m-d H:i:s") }}</a>)
+    </li>
+</ul>
+
+<hr>
+
+<h2>投稿フォーム</h2>
+<form action="/post/create" method="post">
+    名前:<input type="text" name="name"><br>
+    内容:<input type="text" name="text"><br>
+    <input type="submit">
+</form>
+
+<hr>
+
+<a href="/reset">すべてを初期化！</a>
+{% endblock %}
+

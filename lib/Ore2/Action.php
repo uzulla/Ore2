@@ -4,22 +4,46 @@ namespace Ore2;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Stream;
 
 class Action
 {
     /** @var Container $c */
     public $c;
-    /** @var RequestInterface $request */
+    /** @var ServerRequestInterface $request */
     public $request;
     /** @var ResponseInterface $response */
     public $response;
+    /** @var array $parsedBody */
+    public $parsedBody;
 
     public function __construct(Container $container, RequestInterface $request, ResponseInterface $response)
     {
         $this->c = $container;
         $this->request = $request;
         $this->response = $response;
+    }
+
+    public function subRequest($method, $url, $request, $response)
+    {
+        $router = $this->c->router;
+        $match_result = $router->findMatch($method, $url);
+        $action = $match_result->buildAction($this->c);
+        return $action($request, $response);
+    }
+
+    public function params(string $name)
+    {
+        if(is_null($this->parsedBody)) {
+            $this->parsedBody = $this->request->getParsedBody();
+        }
+        return $this->parsedBody[$name] ?? null;
+    }
+
+    public function render(string $template, array $params=[], int $status_code = 200, ResponseInterface $response = null):ResponseInterface
+    {
+        return $this->html($this->c->template->render($template, $params, $status_code, $response));
     }
 
     public function html(string $html = '', int $status_code = 200, ResponseInterface $response = null):ResponseInterface

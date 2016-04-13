@@ -1,0 +1,32 @@
+{% extends "layout.twig" %}
+{% block content %}
+<h1>けいじばん</h1>
+
+<h2>投稿フォーム</h2>
+<form action="/post/create" method="post">
+    名前:<input type="text" name="name"><br>
+    内容:<input type="text" name="text"><br>
+    <input type="submit">
+</form>
+
+<hr>
+
+<h2>投稿一覧</h2>
+<ul>
+    {% if list %}
+        {% for row in list %}
+        <li>
+            {{ row.name }}:
+            {{ row.text }} /
+            (<a href="/post/{{ row.id }}">{{ row.time|date("Y-m-d H:i:s") }}</a>)
+        </li>
+        {% endfor %}
+    {% else %}
+    <li>一件も投稿がありません</li>
+    {% endif %}
+</ul>
+
+<hr>
+
+<a href="/reset">すべてを初期化！</a>
+{% endblock %}
