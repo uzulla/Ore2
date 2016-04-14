@@ -2,6 +2,11 @@
 declare(strict_types=1);
 namespace Ore2;
 
+/**
+ * がんばってつくるぞ！とおもったけれど諦めました…
+ * Class Template
+ * @package Ore2
+ */
 class Template
 {
     public $template_dir = __DIR__ . "/template";
