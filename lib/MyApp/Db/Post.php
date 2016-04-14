@@ -3,6 +3,11 @@ namespace MyApp\Db;
 
 use MyApp\Db;
 
+/**
+ * 時間がなかったんや…
+ * Class Post
+ * @package MyApp\Db
+ */
 class Post extends Db
 {
     public function getAll()

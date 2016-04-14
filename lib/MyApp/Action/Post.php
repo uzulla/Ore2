@@ -5,6 +5,11 @@ use Ore2\Action;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * サンプルアプリ
+ * Class Post
+ * @package MyApp\Action
+ */
 class Post extends Action
 {
     public function showList(ServerRequestInterface $request, ResponseInterface $response):ResponseInterface
@@ -28,13 +33,14 @@ class Post extends Action
     public function show(ServerRequestInterface $request, ResponseInterface $response):ResponseInterface
     {
         $id = $this->routeParams('id');
+
         $m_post = new \MyApp\Db\Post();
         $row = $m_post->get($id);
         if($row===false){
+            // 取得できなかったので、サブリクエストで404を返す
             return $this->subRequest('get', '#notfound', $request, $response);
         }
 
         return $this->render("show.twig", ['row'=>$row]);
     }
-
 }

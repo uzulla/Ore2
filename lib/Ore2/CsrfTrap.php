@@ -2,11 +2,15 @@
 declare(strict_types=1);
 namespace Ore2;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Stream;
 
+/**
+ * SessionにCSRF Tokenを保存し、Postアクセス時に確認。違反していればエラーレスポンスを生成して処理を中断する。
+ * Class CsrfTrap
+ * @package Ore2
+ */
 class CsrfTrap
 {
     /** @var Container */
@@ -63,6 +67,11 @@ class CsrfTrap
         return $response;
     }
 
+    /**
+     * エラー時のレスポンス生成
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function generateBadRequest(ResponseInterface $response)
     {
         $body = new Stream('php://memory', 'w');

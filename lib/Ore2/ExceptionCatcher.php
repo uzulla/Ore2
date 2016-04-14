@@ -6,6 +6,12 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Stream;
 
+/**
+ * このミドルウェア以下で発生した例外がこのミドルウェアまであがってきたら
+ * 処理できなかったものとしてInternalServerErrorとメッセージをレスポンスする
+ * Class ExceptionCatcher
+ * @package Ore2
+ */
 class ExceptionCatcher
 {
     /**

@@ -4,9 +4,13 @@ namespace Ore2;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * PSR-3対応のLogger、普通にmonologをつかいましょう。
+ * Class Logger
+ * @package Ore2
+ */
 class Logger implements LoggerInterface
 {
-
     protected $log_file_name = null;
     protected $level = 100; // level 指定無しではDEBUGになる
 
@@ -85,9 +89,15 @@ class Logger implements LoggerInterface
 
     public function log($level, $message, array $context = array())
     {
-        if (!preg_match('/\A[0-9]{3}\z/u', $level)) $level = constant("static::" . $level);
-        if (!isset(static::$levels[$level])) throw new \InvalidArgumentException('Unknown log level');
-        if ($this->level > $level) return;
+        if (!preg_match('/\A[0-9]{3}\z/u', $level)) {
+            $level = constant("static::" . $level);
+        }
+        if (!isset(static::$levels[$level])) {
+            throw new \InvalidArgumentException('Unknown log level');
+        }
+        if ($this->level > $level) {
+            return;
+        }
 
         $level_str = static::$levels[$level];
 

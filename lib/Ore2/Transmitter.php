@@ -5,6 +5,11 @@ namespace Ore2;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Responseインスタンスを実際にechoやheader()などでクライアントに送信する
+ * Class Transmitter
+ * @package Ore2
+ */
 class Transmitter
 {
     /**
@@ -30,9 +35,13 @@ class Transmitter
 
         $body = $response->getBody();
 
-        if ($body->isSeekable()) $body->rewind();
+        if ($body->isSeekable()) {
+            $body->rewind();
+        }
 
-        while (!$body->eof()) echo $body->read(1024); // TODO set nice chunk size.
+        while (!$body->eof()) {
+            echo $body->read(1024);
+        } // TODO set nice chunk size.
     }
 
     /**
