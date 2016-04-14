@@ -9,7 +9,9 @@ class PHPSession implements StorageInterface
     public function __construct()
     {
         // PSR-7では、PHP純正のセッションをそのままつかうのはダメだと思うけれど時間切れ
-        if(session_status()===PHP_SESSION_NONE) session_start();
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+            session_start();
+        }
     }
 
     public function get($key)
