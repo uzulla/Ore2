@@ -32,6 +32,7 @@ class Router
     {
         foreach($method_list as $method) {
             $method = strtolower($method);
+            // 未定義のMethodが来た時に空配列を入れているだけ
             $this->route[$method] = $this->route[$method] ?? [];
             $this->route[$method][$path] = $action;
         }
