@@ -8,6 +8,15 @@ Just hobby project.
 
 - PSR-7対応風なフレームワークサンプル
 
+## setup
+
+```
+$ composer install
+$ cd public
+$ php -S 127.0.0.1:8080
+$ open http://127.0.0.1:8080
+```
+
 ## router
 
 ```php
