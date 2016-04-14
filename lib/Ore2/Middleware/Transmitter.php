@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Ore2;
+namespace Ore2\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

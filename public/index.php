@@ -33,10 +33,10 @@ $action = $router
 
 // Middlewareのスタックを定義
 $seqencer = new \Ore2\MiddlewareSequencer([
-    new \Ore2\Transmitter(),
-    new \Ore2\ExceptionCatcher(),
-    new \Ore2\LeakCatcher(),
-    new \Ore2\CsrfTrap($container),
+    new \Ore2\Middleware\Transmitter(),
+    new \Ore2\Middleware\ExceptionCatcher(),
+    new \Ore2\Middleware\LeakCatcher(),
+    new \Ore2\Middleware\CsrfTrap($container),
     $action
 ]);
 
