@@ -7,6 +7,7 @@ $router = new \Ore2\Router();
 $router->get('/', '\\MyApp\\Action\\Post::showList');
 $router->get('/post/:id', '\\MyApp\\Action\\Post::show');
 $router->post('/post/create', '\\MyApp\\Action\\Post::create');
+$router->get('/reset', '\\MyApp\\Action\\Post::reset');
 
 // 各種をコンテナにいれる
 $container = new \Ore2\Container();

@@ -1,12 +1,12 @@
 # Ore2 Framework
 
-This is NOT production ready.
+This is NOT for production use.
 
 Just hobby project.
 
 ## 概要
 
-- PSR-7対応のフレームワークサンプル
+- PSR-7対応風なフレームワークサンプル
 
 ## router
 
@@ -57,3 +57,4 @@ $seqencer($request, $response);
 
 ```
 
+# TBD

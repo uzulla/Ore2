@@ -43,4 +43,12 @@ class Post extends Action
 
         return $this->render("show.twig", ['row'=>$row]);
     }
+
+    public function reset(ServerRequestInterface $request, ResponseInterface $response):ResponseInterface
+    {
+        $m_post = new \MyApp\Db\Post();
+        $m_post->reset();
+
+        return $this->html("DBをリセットしました");
+    }
 }
