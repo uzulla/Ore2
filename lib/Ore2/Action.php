@@ -84,7 +84,7 @@ class Action
     public function render(string $template, array $params=[], int $status_code = 200, ResponseInterface $response = null):ResponseInterface
     {
         $params = array_merge($params, $this->c->viewParams);
-        return $this->html($this->c->template->render($template, $params, $status_code, $response));
+        return $this->html($this->c->template->render($template, $params), $status_code, $response);
     }
 
     /**
