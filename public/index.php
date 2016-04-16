@@ -8,6 +8,10 @@ $router->get('/', '\\MyApp\\Action\\Post::showList');
 $router->get('/post/:id', '\\MyApp\\Action\\Post::show');
 $router->post('/post/create', '\\MyApp\\Action\\Post::create');
 $router->get('/reset', '\\MyApp\\Action\\Post::reset');
+$router->get('/sample', function ($req, $res) {
+    /** @var \Ore2\Action $this Actionがbindされているので、methodつかえます */
+    return $this->html('<span style="color:red">テスト</span>');
+});
 
 // 各種をコンテナにいれる
 $container = new \Ore2\Container();
