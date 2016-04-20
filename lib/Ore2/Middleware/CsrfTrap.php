@@ -41,14 +41,14 @@ class CsrfTrap
 
         if($request->getMethod()==='POST'){
             if($session_csrf_token === false){
-                return $this->generateBadRequest($response);
+                return $this->generateBadResponse($response);
             }
 
             $params = $request->getParsedBody();
             $csrf_token = $params[$token_name] ?? false;
 
             if($session_csrf_token!==$csrf_token){
-                return $this->generateBadRequest($response);
+                return $this->generateBadResponse($response);
             }
         }
 
@@ -74,7 +74,7 @@ class CsrfTrap
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function generateBadRequest(ResponseInterface $response)
+    public function generateBadResponse(ResponseInterface $response)
     {
         $body = new Stream('php://memory', 'w');
         $body->write('invalid csrf token');
