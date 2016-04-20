@@ -51,10 +51,20 @@ class RequestAndResponseCapture
 
     public function saveJsonSerializedResponse(ResponseInterface $response)
     {
+        $stream = $response->getBody();
+        if ($stream->isSeekable()) {
+            $stream->rewind();
+        }
+
+        $body = '';
+        while (!$stream->eof()) {
+            $body .= $stream->read(1024);
+        }
+
         $data = [
             'status' => $response->getStatusCode(),
             'header' => $response->getHeaders(),
-            'body' => $response->getBody()->getContents(),
+            'body' => $body,
         ];
 
         file_put_contents($this->prefix . "_response.json", json_encode($data, JSON_PRETTY_PRINT));
