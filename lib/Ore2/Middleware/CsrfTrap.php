@@ -5,6 +5,8 @@ namespace Ore2\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Stream;
+use Ore2\Container;
+use Ore2\Session;
 
 /**
  * SessionにCSRF Tokenを保存し、Postアクセス時に確認。違反していればエラーレスポンスを生成して処理を中断する。
