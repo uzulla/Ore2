@@ -39,13 +39,13 @@ $action = $router
 // Middlewareのスタックを定義
 $seqencer = new \Ore2\MiddlewareSequencer([
     new \Ore2\Middleware\Transmitter(),
+    new \Ore2\Middleware\ExceptionCatcher(),
+    new \Ore2\Middleware\LeakCatcher(),
+    new \Ore2\Middleware\RequestAndResponseCapture(__DIR__ . "/../tmp"),
     new \Ore2\Middleware\MaintenancePage(function ($request) {
         return file_exists(__DIR__ . '/mente.html');
     },
         __DIR__ . '/mente.html'),
-    new \Ore2\Middleware\ExceptionCatcher(),
-    new \Ore2\Middleware\LeakCatcher(),
-    new \Ore2\Middleware\RequestAndResponseCapture(__DIR__ . "/../tmp"),
     new \Ore2\Middleware\CsrfTrap($container),
     $action
 ]);
