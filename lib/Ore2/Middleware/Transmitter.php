@@ -40,8 +40,8 @@ class Transmitter
         }
 
         while (!$body->eof()) {
-            echo $body->read(1024);
-        } // TODO set nice chunk size.
+            echo $body->read(4096);
+        }
     }
 
     /**
